@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+
+if grep -q 'React' README.md 
+then
+  echo "proceeding"
+else
+  echo "not in right project?" && exit 64
+fi
+
+find app -name FeaturePage | xargs rm -rf
+find app -name RepoListItem | xargs rm -rf
+find app -name ReposList | xargs rm -rf
+
+newname=$1
+
+find app -name '*Home*' | while read f
+do 
+  mv $f `echo $f | sed "s/Home\([a-z]*\)\?/$newname/gi"`
+done
+
+grep -rl Home app
+grep -rl Home app | xargs perl -pi -e "s/Home([a-z]*)?/$newname/gi"
